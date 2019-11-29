@@ -1,9 +1,20 @@
 from enroll import Enroll
 from poincare import handle_poincare
-from delta_core_processing import get_distances
+from delta_core_processing import get_distance
 
-map_ = handle_poincare("/home/greg/Documents/Biometrics/final_project/fvc2004/DB3_B/101_1.tif",16, 1, True, False)
+map_,im_shape = handle_poincare("/home/greg/Documents/Biometrics/final_project/fvc2004/DB3_B/101_1.tif",40, 1, True, False)
+print("map of cores and deltas")
+print(map_)
 
+#im_shape is (width,height) #(300,480 for FVC2002 and 2004)
+center = (im_shape[0]/2,im_shape[1]/2)
+print("center:")
+print(center)
+
+dist,sign = get_distance(map_, center)
+print("dist,sign")
+print(dist)
+print(sign)
 
 #DB_path = "/home/greg/Documents/Biometrics/final_project/fvc2004/"
 

@@ -1,5 +1,5 @@
 from poincare import handle_poincare
-from delta_core_processing import get_distances
+from delta_core_processing import get_distance
 import os
 
 def Enroll(dataset_path):
@@ -23,14 +23,12 @@ def Enroll(dataset_path):
 
         # 3. Go through imgages, and apply poincare
         for image in training_images:
-            map_ = handle_poincare(image, 16, 1, True, False)
+            map_ ,im_shape = handle_poincare(image, 16, 1, True, False)
             print("map of cores and deltas")
             print(map_)
 
-            center = image.shape
-            center[0] /= 2
-            center[1] /= 2
-            get_distances(map_,center)
+            center = (im_shape[0] / 2, im_shape[1] / 2)
+            dist, sign = get_distance(map_, center)
 
         print("dir " + member + " done")
 

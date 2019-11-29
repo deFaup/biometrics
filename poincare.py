@@ -90,7 +90,7 @@ def handle_poincare(image,block_size,tolerance,smooth,save):
         base_image_name = os.path.splitext(os.path.basename(image))[0]
         result.save(base_image_name + "_poincare.gif", "GIF")
 
-    return map_
+    return map_,im.size
 
 # To run from CLI uncomment this section
 # parser = argparse.ArgumentParser(description="Singularities with Poincare index")

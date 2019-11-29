@@ -10,16 +10,20 @@ def filter_list(list_):
             b = list_[i+1]
             c = list_[i+2]
             d = list_[i+3]
-            if a[i+0]==b[i+0] and c[i+0]==d[i+0] and a[i+1]==c[i+1] and b[i+1]==d[i+1] and a[i+2]==b[i+2] and c[i+2]==d[i+2] and a[i+3]==c[i+3] and b[i+3]==d[i+3]:
+            if a[0]==b[0] and c[0]==d[0] and a[1]==c[1] and b[1]==d[1] and\
+                    a[2]==b[2] and c[2]==d[2] and a[3]==c[3] and b[3]==d[3]:
                 locations.append((a[0],a[1]))
             i += 1
     return locations
 
-def distance(list_, center):
-    """ return the min dist to center in the given list """
+def find_closest_to_center(list_, center):
+    """ return  closest element in list_ to center """
+    if not len(list_):
+        return None
+
     #Python
-    min_ = float("inf")
-    #Python3 import math min = math.inf
+    min_ = float("inf") #Python3 import math min = math.inf
+    index = None
 
     for i in range(0,len(list_)):
         dist = (list_[i][0] - center[0]) * (list_[i][0] - center[0]) +\
@@ -28,13 +32,24 @@ def distance(list_, center):
             min_ = dist
             index = i
 
-    return min_,index
+    return list_[index]
 
-def get_distances(map_, center):
+def get_distance(map_, center):
     """
-        Input:      map with a list of deltas and cores / center: (x,y) center coord of the image
-        Output:    core distance, delta distance, delta relative pos to core
+        Input:     map with a list of deltas and cores / center: (x,y) center coord of the image
+        Output:    square of L2 distance from core to delta, delta relative position to core (see drawing below)
     """
+
+    ###################---------> x axis
+    #       #         #
+    #   -1  #    1    #
+    #       #         #
+    ###################
+    #       #         #
+    #   0   #    2    #
+    #       #         #
+    ###################
+
     # Get the coordinates of true deltas and cores
     deltas_location = filter_list(map_['delta'])
     cores_location  = filter_list(map_['loop'])
@@ -45,14 +60,20 @@ def get_distances(map_, center):
     print(deltas_location)
 
     # Get the min distance to image center among cores (same for deltas)
-    delta_dist,index = distance(deltas_location,center)
-    core_dist,index2 = distance(cores_location, center)
+    delta = find_closest_to_center(deltas_location,center)
+    core  = find_closest_to_center(cores_location, center)
 
-    sign = lambda delta_coor, core_coor: \
+    getSign = lambda delta_coor, core_coor: \
         ((delta_coor[1] - core_coor[1]) > 0) +\
         (-1 if (delta_coor[0] - core_coor[0]) < 0 else 1)
 
-    return delta_dist,core_dist,sign(deltas_location[index],cores_location[index2])
+    sign = None
+    if core is not None and delta is not None:
+        sign = getSign(delta,core)
+        dist = (core[0] - delta[0]) * (core[0] - delta[0]) +\
+               (core[1] - delta[1]) * (core[1] - delta[1])
+
+    return dist,sign
 
 
 
