@@ -6,6 +6,9 @@ def Enroll(dataset_path):
 
     # list all subdir in the DB ex: ['90222', '90230', '90224', '90228']
     members = os.listdir(dataset_path)
+    database = {}
+    database['values']=[]
+    database['name']=[]
 
     for member in members:
 
@@ -21,18 +24,21 @@ def Enroll(dataset_path):
                 i = i - 1
             i = i + 1
 
-        # 3. Go through imgages, and apply poincare
+        # Go through images
         for image in training_images:
+            # Get a map of cores and deltas
             map_ ,im_shape = handle_poincare(image, 16, 1, True, False)
             print("map of cores and deltas")
             print(map_)
 
+            # If any get distance between core and delta, and relative position
             center = (im_shape[0] / 2, im_shape[1] / 2)
             dist, sign = get_distance(map_, center)
+            if (dist is not None):
+                database['values'].append(dist,sign)
+                database['name'].append(member)
 
         print("dir " + member + " done")
 
-#dataset_path = "/home/greg/Documents/Biometrics/final/fvc2004/"
-#Enroll(dataset_path)
-
+    return database
 
