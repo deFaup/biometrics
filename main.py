@@ -1,8 +1,10 @@
 from enroll import Enroll
+
+######### Test BEGIN
 from poincare import handle_poincare
 from delta_core_processing import get_distance
 
-map_,im_shape = handle_poincare("/home/greg/Documents/Biometrics/final_project/fvc2004/DB3_B/101_1.tif",40, 1, True, False)
+map_,im_shape = handle_poincare("/home/greg/Documents/Biometrics/final_project/fvc2004/DB3_B/101_1.tif",16, 1, True, False)
 print("map of cores and deltas")
 print(map_)
 
@@ -15,6 +17,7 @@ dist,sign = get_distance(map_, center)
 print("dist,sign")
 print(dist)
 print(sign)
+######### Test END
 
 #DB_path = "/home/greg/Documents/Biometrics/final_project/fvc2004/"
 
