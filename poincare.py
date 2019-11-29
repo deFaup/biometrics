@@ -83,22 +83,23 @@ def handle_poincare(image,block_size,tolerance,smooth,save):
     if smooth:
         angles = utils.smooth_angles(angles)
 
-    result, map_ = calculate_singularities(im, angles, int(args.tolerance[0]), W)
+    result, map_ = calculate_singularities(im, angles, int(tolerance), W)
     result.show()
 
     if save:
-        base_image_name = os.path.splitext(os.path.basename(args.image[0]))[0]
+        base_image_name = os.path.splitext(os.path.basename(image))[0]
         result.save(base_image_name + "_poincare.gif", "GIF")
 
     return map_
 
-# If run from CLI
-parser = argparse.ArgumentParser(description="Singularities with Poincare index")
-parser.add_argument("image", nargs=1, help = "Path to image")
-parser.add_argument("block_size", nargs=1, help = "Block size")
-parser.add_argument("tolerance", nargs=1, help = "Tolerance for Poincare index")
-parser.add_argument('--smooth', "-s", action='store_true', help = "Use Gauss for smoothing")
-parser.add_argument("--save", action='store_true', help = "Save result image as src_poincare.gif")
-args = parser.parse_args()
+# To run from CLI uncomment this section
+# parser = argparse.ArgumentParser(description="Singularities with Poincare index")
+# parser.add_argument("image", nargs=1, help = "Path to image")
+# parser.add_argument("block_size", nargs=1, help = "Block size")
+# parser.add_argument("tolerance", nargs=1, help = "Tolerance for Poincare index")
+# parser.add_argument('--smooth', "-s", action='store_true', help = "Use Gauss for smoothing")
+# parser.add_argument("--save", action='store_true', help = "Save result image as src_poincare.gif")
+# args = parser.parse_args()
+#
+# handle_poincare(args.image[0],args.block_size[0],args.tolerance[0],args.smooth,args.save)
 
-handle_poincare(args.image[0],args.block_size[0],args.tolerance[0],args.smooth,args.save)

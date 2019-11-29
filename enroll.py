@@ -23,7 +23,7 @@ def Enroll(dataset_path):
 
         # 3. Go through imgages, and apply poincare
         for image in training_images:
-            map_ = handle_poincare(image, 16, 1, True, True)
+            map_ = handle_poincare(image, 16, 1, True, False)
             print("map of cores and deltas")
             print(map_)
 
@@ -34,7 +34,7 @@ def Enroll(dataset_path):
 
         print("dir " + member + " done")
 
-dataset_path = "/home/greg/Documents/Biometrics/final/fvc2004/"
-Enroll(dataset_path)
+#dataset_path = "/home/greg/Documents/Biometrics/final/fvc2004/"
+#Enroll(dataset_path)
 
 
