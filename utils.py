@@ -7,12 +7,15 @@ import sobel
 import copy
 
 def apply_kernel_at(get_value, kernel, i, j):
+    #kernel_tmp = kernel
+    #kernel = list(kernel)
     kernel_size = len(kernel)
     result = 0
     for k in range(0, kernel_size):
         for l in range(0, kernel_size):
             pixel = get_value(i + k - kernel_size / 2, j + l - kernel_size / 2)
             result += pixel * kernel[k][l]
+    #kernel = kernel_tmp
     return result
 
 def apply_to_each_pixel(pixels, f):
