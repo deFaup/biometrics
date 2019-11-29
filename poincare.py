@@ -63,6 +63,9 @@ def handle_poincare(image,block_size,tolerance,smooth,save,output_path_name):
         image = path to image
         block_size = smallest window to look at
         tolerance = ?
+        Smooth : True False
+        Save : True False
+        output_path_name : /some/path/to/image (no file extension)
     """
 
     im = Image.open(image)
