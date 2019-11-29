@@ -28,8 +28,6 @@ def Enroll(dataset_path):
         for image in training_images:
             # Get a map of cores and deltas
             map_ ,im_shape = handle_poincare(image, 16, 1, True, False)
-            print("map of cores and deltas")
-            print(map_)
 
             # If any get distance between core and delta, and relative position
             center = (im_shape[0] / 2, im_shape[1] / 2)
