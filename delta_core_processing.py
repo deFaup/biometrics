@@ -1,3 +1,6 @@
+from PIL import Image, ImageDraw
+import os
+
 def filter_list(list_):
     locations = []
 
@@ -68,7 +71,7 @@ def find_closest_to_center(list_, center):
 
     return list_[index]
 
-def get_distance(map_, center):
+def get_distance(map_, center, image, show_dist, save_dist, save_path):
     """
         Input:     map with a list of deltas and cores / center: (x,y) center coord of the image
         Output:    square of L2 distance from core to delta, delta relative position to core (see drawing below)
@@ -90,10 +93,10 @@ def get_distance(map_, center):
     deltas_location= new_filter(map_['delta'])
     cores_location = new_filter(map_['loop'])
 
-    print("real cores: ")
-    print(cores_location)
-    print("real deltas: ")
-    print(deltas_location)
+    # print("real cores: ")
+    # print(cores_location)
+    # print("real deltas: ")
+    # print(deltas_location)
 
     # Get the min distance to image center among cores (same for deltas)
     delta = find_closest_to_center(deltas_location, center)
@@ -108,5 +111,19 @@ def get_distance(map_, center):
         sign = getSign(delta, core)
         dist = (core[0] - delta[0]) * (core[0] - delta[0]) + \
                (core[1] - delta[1]) * (core[1] - delta[1])
+
+        if save_dist or show_dist:
+            im = Image.open(image)
+            result = im.convert("RGB")
+            draw = ImageDraw.Draw(result)
+            draw.line([core[0],core[1],delta[0],delta[1]], fill=(255,255,0),width=5)
+
+            draw.rectangle([core[0],core[1], core[0]+10,core[1]+10], fill=(255,0,0))
+            draw.rectangle([delta[0],delta[1], delta[0]+10,delta[1]+10], fill=(0,255,0))
+
+            if show_dist:
+                result.show()
+            if save_dist:
+                result.save(save_path + os.path.basename(image) + "_core_delta_dist.gif", "GIF")
 
     return dist, sign
