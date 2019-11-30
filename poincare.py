@@ -33,38 +33,43 @@ def poincare_index_at(i, j, angles, tolerance):
         return "whorl"
     return "none"
 
-def calculate_singularities(im, angles, tolerance, W):
+def calculate_singularities(im, angles, tolerance, W,show_img):
     (x, y) = im.size
     result = im.convert("RGB")
 
-    draw = ImageDraw.Draw(result)
+    draw = None
+    if show_img:
+        draw = ImageDraw.Draw(result)
 
     colors = {"loop" : (150, 0, 0), "delta" : (0, 150, 0), "whorl": (0, 0, 150)}
     map_ = {}
     map_['delta']= []
     map_['loop']= []
+    map_['whorl']= []
 
     for i in range(1, len(angles) - 1):
         for j in range(1, len(angles[i]) - 1):
             singularity = poincare_index_at(i, j, angles, tolerance)
+
             if singularity != "none":
                 vertical_axis_left = (i * W, j * W)
                 horizontal_axis_bottom = ((i + 1) * W, (j + 1) * W)
-
-                draw.rectangle([vertical_axis_left, horizontal_axis_bottom], outline = colors[singularity])
                 map_[singularity].append((i * W, j * W, (i + 1) * W, (j + 1) * W))
-    
+
+                if show_img:
+                    draw.rectangle([vertical_axis_left, horizontal_axis_bottom], outline = colors[singularity])
     del draw
     return result, map_
 
-def handle_poincare(image,block_size,tolerance,smooth,save,output_path_name):
+def handle_poincare(image,block_size,tolerance,smooth,save,show_img,output_path):
     """ Just a handle to call poincare from other python file instead of CLI
         smooth and save are boolean
         image = path to image
         block_size = smallest window to look at
         tolerance = ?
-        Smooth : True False
-        Save : True False
+        smooth : True False
+        save : True False
+        show_img : Open windows to show results True False
         output_path_name : /some/path/to/image (no file extension)
     """
 
@@ -86,13 +91,14 @@ def handle_poincare(image,block_size,tolerance,smooth,save,output_path_name):
     if smooth:
         angles = utils.smooth_angles(angles)
 
-    result, map_ = calculate_singularities(im, angles, int(tolerance), W)
-    result.show()
+    result, map_ = calculate_singularities(im, angles, int(tolerance), W, show_img)
+    if show_img:
+        result.show()
 
     if save:
         base_image_name = os.path.splitext(os.path.basename(image))[0]
-        if output_path_name is not None:
-            base_image_name = output_path_name
+        if output_path is not None:
+            base_image_name = output_path + base_image_name
 
         result.save(base_image_name + "_poincare.gif", "GIF")
 
@@ -107,5 +113,5 @@ def handle_poincare(image,block_size,tolerance,smooth,save,output_path_name):
 # parser.add_argument("--save", action='store_true', help = "Save result image as src_poincare.gif")
 # args = parser.parse_args()
 #
-# handle_poincare(args.image[0],args.block_size[0],args.tolerance[0],args.smooth,args.save,None)
+# handle_poincare(args.image[0],args.block_size[0],args.tolerance[0],args.smooth,args.save,True,None)
 
