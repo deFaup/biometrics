@@ -47,7 +47,7 @@ def Enroll(dataset_path, output_path, smooth, save_poincare, show_poincare, save
 
         print("dir " + member + " done")
 
-    f = open(dataset_path.split("/")[-2] + '.pckl', 'wb')
+    f = open(output_path + dataset_path.split("/")[-2] + '.pckl', 'wb')
     cPickle.dump(database, f, protocol=2)
     f.close()
 
