@@ -6,6 +6,7 @@ import utils
 import argparse
 import math
 import os
+import cv2
 
 signum = lambda x: -1 if x < 0 else 1
 
@@ -33,12 +34,12 @@ def poincare_index_at(i, j, angles, tolerance):
         return "whorl"
     return "none"
 
-def calculate_singularities(im, angles, tolerance, W,show_img):
+def calculate_singularities(im, angles, tolerance, W, save):
     (x, y) = im.size
     result = im.convert("RGB")
 
     draw = None
-    if show_img:
+    if save:
         draw = ImageDraw.Draw(result)
 
     colors = {"loop" : (150, 0, 0), "delta" : (0, 150, 0), "whorl": (0, 0, 150)}
@@ -56,7 +57,7 @@ def calculate_singularities(im, angles, tolerance, W,show_img):
                 horizontal_axis_bottom = ((i + 1) * W, (j + 1) * W)
                 map_[singularity].append((i * W, j * W, (i + 1) * W, (j + 1) * W))
 
-                if show_img:
+                if save:
                     draw.rectangle([vertical_axis_left, horizontal_axis_bottom], outline = colors[singularity])
     del draw
     return result, map_
@@ -73,14 +74,15 @@ def handle_poincare(image,block_size,tolerance,smooth,save,show_img,output_path)
         output_path_name : /some/path/to/image (no file extension)
     """
 
+    ##TO DO -- img proc to get rid of the surrounding of the fingerprint
+    # add some image processing here
+    gray = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
+    retval, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY|cv2.THRESH_OTSU)
+    image = image.replace('.tif','_bin.tif')
+    cv2.imwrite(image, binary)
+
     im = Image.open(image)
     im = im.convert("L")  # covert to grayscale
-
-    ##TO DO
-    # add some image processing here
-    # gray = cv2.imread(member_path + "/" + image, cv2.IMREAD_GRAYSCALE)
-    # retval, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)
-    # cv2.imwrite(dataset_path +  "/" + member + "/_" + image.replace('.tif','bin.tif'), binary)
 
     W = int(block_size)
 
@@ -91,7 +93,7 @@ def handle_poincare(image,block_size,tolerance,smooth,save,show_img,output_path)
     if smooth:
         angles = utils.smooth_angles(angles)
 
-    result, map_ = calculate_singularities(im, angles, int(tolerance), W, show_img)
+    result, map_ = calculate_singularities(im, angles, int(tolerance), W, save)
     if show_img:
         result.show()
 
