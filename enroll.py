@@ -25,15 +25,16 @@ def Enroll(dataset_path, output_path, smooth, save_poincare, show_poincare, save
         # specify which format to use
         i = 0
         while i < len(training_images):
-            if not training_images[i].endswith(".tif") or training_images[i].startswith("_"):
+            if (not training_images[i].endswith(".tif")) or (os.path.basename(training_images[i]).split('_')[-1]=='bin.tif'):
                 training_images.pop(i)
                 i = i - 1
             i = i + 1
 
         # Go through images
-        for image in training_images:
-            # Get a map of cores and deltas
+        for i in range (0, len(training_images)/2):
+            image = training_images[i]
 
+            # Get a map of cores and deltas
             map_, im_shape = handle_poincare(member_path + "/" + image, 16, 1, \
                                              smooth, save_poincare, show_poincare, output_path)
 
