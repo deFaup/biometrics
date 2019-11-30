@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw
-import os
+import os, math
 
 
 def filter_list(list_):
@@ -114,11 +114,14 @@ def get_distance(map_, center, image, save_dist, show_dist, save_path):
     dist, sign = None, None
     if core is not None and delta is not None:
         sign = getSign(delta, core)
-        dist = (core[0] - delta[0]) * (core[0] - delta[0]) + \
-               (core[1] - delta[1]) * (core[1] - delta[1])
+        dist = math.sqrt( (core[0] - delta[0]) * (core[0] - delta[0]) + \
+               (core[1] - delta[1]) * (core[1] - delta[1]) )
 
         if save_dist or show_dist:
+            image = image.replace('.tif','_bin.tif')
             im = Image.open(image)
+            os.remove(image)
+
             result = im.convert("RGB")
             draw = ImageDraw.Draw(result)
             draw.line([core[0], core[1], delta[0], delta[1]], fill=(255, 255, 0), width=5)
